@@ -24,13 +24,6 @@ try {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
 
-    // Ensure role column exists for older databases
-    try {
-        $pdo->exec("ALTER TABLE users ADD COLUMN role ENUM('user', 'admin') NOT NULL DEFAULT 'user'");
-    } catch (PDOException $e) {
-        // Ignore if column already exists
-    }
-    
     // Create news table
     $pdo->exec("CREATE TABLE IF NOT EXISTS news (
         id INT PRIMARY KEY AUTO_INCREMENT,
@@ -43,13 +36,7 @@ try {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )");
 
-    // Ensure banner_image column exists for older databases
-    try {
-        $pdo->exec("ALTER TABLE news ADD COLUMN banner_image TEXT");
-    } catch (PDOException $e) {
-        // Ignore if column already exists
-    }
-    
+
 } catch(PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
