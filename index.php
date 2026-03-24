@@ -28,6 +28,7 @@
                         if ($user && password_verify($password, $user['password'])) {
                             $_SESSION['user_id'] = $user['id'];
                             $_SESSION['user_name'] = $user['fullname'];
+                            $_SESSION['user_role'] = $user['role'] ?? 'user';
                             header('Location: news.php');
                             exit;
                         } else {

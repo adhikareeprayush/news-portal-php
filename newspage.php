@@ -1,8 +1,4 @@
 <?php require 'config.php';
-if (!isset($_SESSION['user_id'])) {
-    header('Location: index.php');
-    exit;
-}
 
 $article = null;
 if (isset($_GET['id'])) {
@@ -20,6 +16,8 @@ if (isset($_GET['id'])) {
         exit;
     }
 }
+
+$banner = !empty($article['banner_image']) ? $article['banner_image'] : 'https://images.unsplash.com/photo-1495433530039-eb00ed3ab57a?w=800&h=400&fit=crop';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,16 +32,25 @@ if (isset($_GET['id'])) {
         <div class="nav-container">
             <h1 class="logo">📰 News Portal</h1>
             <div class="nav-links">
-                <span class="welcome">Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
                 <a href="news.php" class="back-btn">Back to News</a>
-                <a href="logout.php" class="logout-btn">Logout</a>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <span class="welcome">Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?> (<?php echo htmlspecialchars($_SESSION['user_role'] ?? 'user'); ?>)</span>
+                    <?php if (($_SESSION['user_role'] ?? 'user') === 'admin'): ?>
+                        <a href="addnews.php" class="back-btn">Add News</a>
+                        <a href="editnews.php?id=<?php echo $article['id']; ?>" class="back-btn">Edit News</a>
+                    <?php endif; ?>
+                    <a href="logout.php" class="logout-btn">Logout</a>
+                <?php else: ?>
+                    <a href="index.php" class="back-btn">Login</a>
+                    <a href="register.php" class="back-btn">Register</a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
 
     <div class="article-container">
         <article class="article">
-            <img src="https://images.unsplash.com/photo-1495433530039-eb00ed3ab57a?w=800&h=400&fit=crop" alt="Article Image" class="article-img">
+            <img src="<?php echo htmlspecialchars($banner); ?>" alt="Article Image" class="article-img">
             <div class="article-body">
                 <h1><?php echo htmlspecialchars($article['title']); ?></h1>
                 <div class="article-meta">

@@ -2,8 +2,8 @@
 // Database configuration
 $host = 'localhost';
 $db = 'news_portal';
-$user = 'root';
-$pass = '';
+$user = 'phpmyadmin';
+$pass = '12345';
 
 try {
     $pdo = new PDO("mysql:host=$host", $user, $pass);
@@ -20,8 +20,16 @@ try {
         email VARCHAR(255) UNIQUE NOT NULL,
         phone VARCHAR(20),
         password VARCHAR(255) NOT NULL,
+        role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
+
+    // Ensure role column exists for older databases
+    try {
+        $pdo->exec("ALTER TABLE users ADD COLUMN role ENUM('user', 'admin') NOT NULL DEFAULT 'user'");
+    } catch (PDOException $e) {
+        // Ignore if column already exists
+    }
     
     // Create news table
     $pdo->exec("CREATE TABLE IF NOT EXISTS news (
@@ -29,10 +37,18 @@ try {
         title VARCHAR(255) NOT NULL,
         description TEXT,
         content TEXT NOT NULL,
+        banner_image TEXT,
         author VARCHAR(255),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )");
+
+    // Ensure banner_image column exists for older databases
+    try {
+        $pdo->exec("ALTER TABLE news ADD COLUMN banner_image TEXT");
+    } catch (PDOException $e) {
+        // Ignore if column already exists
+    }
     
 } catch(PDOException $e) {
     die("Connection failed: " . $e->getMessage());

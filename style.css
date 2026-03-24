@@ -8,8 +8,11 @@
 
 body {
   width: 100%;
+  min-height: 100vh;
   overflow-x: hidden;
   font-family: "Noto Sans", sans-serif;
+  display: flex;
+  flex-direction: column;
 }
 
 .login-div {
@@ -60,6 +63,23 @@ body {
 }
 
 .form-div .input-group input {
+  width: 260px;
+  height: 28px;
+  border: 0;
+  border-radius: 4px;
+  background-color: #fefefe;
+}
+
+.form-div .input-group textarea {
+  width: 260px;
+  border: 0;
+  border-radius: 4px;
+  background-color: #fefefe;
+  padding: 8px;
+  resize: vertical;
+}
+
+.form-div .input-group select {
   width: 260px;
   height: 28px;
   border: 0;
@@ -307,7 +327,7 @@ body {
   color: #fff;
   text-align: center;
   padding: 20px;
-  margin-top: 40px;
+  margin-top: auto;
 }
 
 .footer p {

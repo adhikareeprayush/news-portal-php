@@ -17,14 +17,19 @@
                 $email = $_POST['email'] ?? '';
                 $phone = $_POST['phone'] ?? '';
                 $password = $_POST['password'] ?? '';
+                $role = $_POST['role'] ?? 'user';
+
+                if (!in_array($role, ['user', 'admin'], true)) {
+                    $role = 'user';
+                }
                 
-                if (empty($fullname) || empty($email) || empty($phone) || empty($password)) {
+                if (empty($fullname) || empty($email) || empty($phone) || empty($password) || empty($role)) {
                     echo '<p class="error">Please fill all fields</p>';
                 } else {
                     try {
                         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                        $stmt = $pdo->prepare("INSERT INTO users (fullname, email, phone, password) VALUES (?, ?, ?, ?)");
-                        $stmt->execute([$fullname, $email, $phone, $hashed_password]);
+                        $stmt = $pdo->prepare("INSERT INTO users (fullname, email, phone, password, role) VALUES (?, ?, ?, ?, ?)");
+                        $stmt->execute([$fullname, $email, $phone, $hashed_password, $role]);
                         
                         echo '<p class="success">Registration successful! <a href="index.php">Login here</a></p>';
                     } catch(PDOException $e) {
@@ -54,7 +59,14 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
-                <button type="submit">Register</button>
+                <div class="input-group">
+                    <label for="role">Register As</label>
+                    <select style="width: 200px" id="role" name="role" required>
+                        <option value="user" selected>User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <button  type="submit">Register</button>
             </form>
             <p class="auth-link">Already have an account? <a href="index.php">Login here</a></p>
         </div>
