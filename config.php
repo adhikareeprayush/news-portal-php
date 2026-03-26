@@ -6,6 +6,7 @@ $user = 'phpmyadmin';
 $pass = '12345';
 
 try {
+    // PHP Data Objects (PDO) connection
     $pdo = new PDO("mysql:host=$host", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
@@ -23,6 +24,9 @@ try {
         role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
+
+    // Session => stores the data required for the app after logging in
+    // Session is an array  
 
     // Create news table
     $pdo->exec("CREATE TABLE IF NOT EXISTS news (
@@ -43,3 +47,4 @@ try {
 
 session_start();
 ?>
+
